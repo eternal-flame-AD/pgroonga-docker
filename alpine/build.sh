@@ -18,20 +18,23 @@ pushd vendor
 ruby download_mecab.rb
 popd
 
+mkdir -p /target
+
 cmake \
+  -G"Unix Makefiles" \
   -S . \
   -B ../groonga.build \
   --preset=release-maximum \
   -DCMAKE_INSTALL_PREFIX=/usr/local
-cmake --build ../groonga.build
-cmake --install ../groonga.build
+cmake --build ../groonga.build -j
+(cd ../groonga.build && make install && make install DESTDIR=/target)
 popd
 
 wget https://packages.groonga.org/source/pgroonga/pgroonga-${PGROONGA_VERSION}.tar.gz
 tar xf pgroonga-${PGROONGA_VERSION}.tar.gz
 pushd pgroonga-${PGROONGA_VERSION}
-make PGRN_DEBUG=yes HAVE_MSGPACK=1 MSGPACK_PACKAGE_NAME=msgpack-c -j$(nproc)
-make install
+make PGRN_DEBUG=R{PGRN_DEBUG} HAVE_MSGPACK=1 MSGPACK_PACKAGE_NAME=msgpack-c -j$(nproc)
+make install && make install DESTDIR=/target
 popd
 
 popd
