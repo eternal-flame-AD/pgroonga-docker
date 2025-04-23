@@ -24,6 +24,8 @@ cmake \
   -G"Unix Makefiles" \
   -S . \
   -B ../groonga.build \
+  -DCMAKE_C_FLAGS="$CFLAGS" \
+  -DCMAKE_CXX_FLAGS="$CXXFLAGS" \
   --preset=release-maximum \
   -DCMAKE_INSTALL_PREFIX=/usr/local
 cmake --build ../groonga.build -j
